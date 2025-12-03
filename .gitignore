@@ -1,0 +1,16 @@
+# Archivos de entorno y claves secretas (¡CRÍTICO!)
+.env
+
+# Carpeta de librerías (no se sube, pesa mucho)
+venv/
+.venv/
+
+# Archivos compilados de Python
+__pycache__/
+*.pyc
+
+# Archivos de salida generados por tu agente de investigación
+research_output.txt
+
+# Archivos de sistema
+.DS_Store
