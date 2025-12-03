@@ -2,6 +2,7 @@ from langchain_community.tools import WikipediaQueryRun, DuckDuckGoSearchRun
 from langchain_community.utilities import WikipediaAPIWrapper
 from langchain.tools import Tool
 from datetime import datetime
+from pydantic import BaseModel, Field
 
 def save_to_txt(data: str, filename: str = "research_output.txt"):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -18,11 +19,21 @@ save_tool = Tool(
     description="Saves structured research data to a text file.",
 )
 
-search = DuckDuckGoSearchRun()
-search_tool = Tool ( 
+_ddg = DuckDuckGoSearchRun()
+
+class SearchInput(BaseModel):
+    query: str = Field(..., description="Search query for DuckDuckGo.")
+
+
+def search_func(query: str) -> str:
+    """Función simple: recibe SOLO el string de búsqueda."""
+    return _ddg.run(query)
+
+search_tool = Tool(
     name="search",
-    func=search.run,
-    description="Search the web for information",
+    func=search_func,
+    description="Search the web for information.",
+    args_schema=SearchInput,  # aquí entra Pydantic
 )
 
 api_wrapper = WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=100)
